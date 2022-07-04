@@ -1,4 +1,5 @@
 import styled from "styled-components";
+// import FadeIn from "react-fade-in";
 
 export const FlexGrid = styled.div`
   display: flex;
