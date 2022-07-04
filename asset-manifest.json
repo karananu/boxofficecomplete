@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/boxofficecomplete/static/css/main.b2586571.css",
+    "main.js": "/boxofficecomplete/static/js/main.9755e744.js",
+    "index.html": "/boxofficecomplete/index.html",
+    "main.b2586571.css.map": "/boxofficecomplete/static/css/main.b2586571.css.map",
+    "main.9755e744.js.map": "/boxofficecomplete/static/js/main.9755e744.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.b2586571.css",
+    "static/js/main.9755e744.js"
+  ]
+}
