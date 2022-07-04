@@ -1,15 +1,23 @@
+/* eslint-disable no-underscore-dangle */
 import React, { useEffect, useReducer } from "react";
 import { useParams } from "react-router-dom";
 import { apiGet } from "../misc/config";
-
+import ShowMainData from "../components/show/ShowMainData";
+import Details from "../components/show/Details";
+import Seasons from "../components/show/Seasons";
+import Cast from "../components/show/Cast";
+import { InfoBlock } from "./Show.styled";
+import { ShowPageWrapper } from "./Show.styled";
 const reducer = (prevState, action) => {
   switch (action.type) {
     case "FETCH_SUCCESS": {
       return { isLoading: false, error: null, show: action.show };
     }
-    case "FETCH_FAIL": {
+
+    case "FETCH_FAILED": {
       return { ...prevState, isLoading: false, error: action.error };
     }
+
     default:
       return prevState;
   }
@@ -20,35 +28,34 @@ const initialState = {
   isLoading: true,
   error: null,
 };
+
 const Show = () => {
   const { id } = useParams();
+
   const [{ show, isLoading, error }, dispatch] = useReducer(
     reducer,
     initialState
   );
 
   useEffect(() => {
-    let IsMounted = true;
+    let isMounted = true;
 
     apiGet(`/shows/${id}?embed[]=seasons&embed[]=cast`)
       .then((results) => {
-        setTimeout(() => {
-          if (IsMounted) {
-            dispatch({ type: "FETCH_SUCCESS", show: results });
-          }
-        }, 2000);
+        if (isMounted) {
+          dispatch({ type: "FETCH_SUCCESS", show: results });
+        }
       })
       .catch((err) => {
-        if (IsMounted) {
-          dispatch({ type: "FETCH_SUCCESS", error: err.message });
+        if (isMounted) {
+          dispatch({ type: "FETCH_FAILED", error: err.message });
         }
       });
+
     return () => {
-      IsMounted = false;
+      isMounted = false;
     };
   }, [id]);
-
-  console.log("show", show);
 
   if (isLoading) {
     return <div>Data is being loaded</div>;
@@ -58,7 +65,36 @@ const Show = () => {
     return <div>Error occured: {error}</div>;
   }
 
-  return <div>this is show page</div>;
+  return (
+    <ShowPageWrapper>
+      <ShowMainData
+        image={show.image}
+        name={show.name}
+        rating={show.rating}
+        summary={show.summary}
+        tags={show.genres}
+      />
+
+      <InfoBlock>
+        <h2>Details</h2>
+        <Details
+          status={show.status}
+          network={show.network}
+          premiered={show.premiered}
+        />
+      </InfoBlock>
+
+      <InfoBlock>
+        <h2>Seasons</h2>
+        <Seasons seasons={show._embedded.seasons} />
+      </InfoBlock>
+
+      <InfoBlock>
+        <h2>Cast</h2>
+        <Cast cast={show._embedded.cast} />
+      </InfoBlock>
+    </ShowPageWrapper>
+  );
 };
 
 export default Show;
