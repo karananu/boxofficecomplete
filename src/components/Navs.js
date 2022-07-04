@@ -1,28 +1,31 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-const LINKS=[
-    {to:'/',text:'Home'},
-    {to:'/anu',text:'anu'}
-]
+import React from "react";
+
+import { useLocation } from "react-router-dom";
+import { NavList, LinkStyled } from "./Nav.styled";
+
+const LINKS = [
+  { to: "/", text: "Home" },
+  { to: "/anu", text: "anu" },
+];
 const Navs = () => {
+  const location = useLocation();
+  console.log("location", location);
   return (
     <div>
-        <ul>
-            {LINKS.map(
-                items=><li key={items.to}>
-                    <Link to={items.to}>
-            {items.text}
-            </Link>
-                </li>
-            )}
-            <li>
-            <Link to="/anu">
-            Go to S page
-            </Link>
-            </li>
-        </ul>
+      <NavList>
+        {LINKS.map((items) => (
+          <li key={items.to}>
+            <LinkStyled
+              to={items.to}
+              className={items.to === location.pathname ? "active" : " "}
+            >
+              {items.text}
+            </LinkStyled>
+          </li>
+        ))}
+      </NavList>
     </div>
-  )
-}
+  );
+};
 
-export default Navs
+export default Navs;
